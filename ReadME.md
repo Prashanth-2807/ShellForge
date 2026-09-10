@@ -14,3 +14,16 @@ Week 1, established the foundation of the ShellForge project by:
 - Automatic buffer expansion using realloc()
 - Proper memory cleanup using free()
 Note: Go to Github ReadMe, edit and add the content/ here above features and click on commit changes to view updated ReadMe file.
+
+## Week 3 Features
+- Command parsing using strtok()
+- Dynamic argv[] construction
+- Modular parser implementation
+- Ready for process execution with execvp()
+
+
+## Week 4 Features
+- Process creation using fork()
+- Command execution using execvp()
+- Parent-child synchronization using waitpid()
+- Error handling using perror()
