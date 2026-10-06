@@ -56,10 +56,21 @@ Note: Go to Github ReadMe, edit and add the content/ here above features and cli
 - Two-command pipelines
 - IPC using file descriptors
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a537530 (Week 9: Added I/O redirection support)
 ## Week 8 Features
 - Memory leak detection using Valgrind
 - Debugging using GDB
 - AddressSanitizer support
 - Defensive programming practices
 - Improved error handling
+
+## Week 9 Features
+- File descriptor management
+- Output redirection (>)
+- Input redirection (<)
+- Append redirection (>>)
+- Error redirection (2>)
+- File handling using open(), close(), and dup2()
