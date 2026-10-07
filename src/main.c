@@ -9,61 +9,79 @@
 #include "../include/signals.h"
 #include "../include/pipes.h"
 #include "../include/redirect.h"
+#include "../include/thread.h"
+
 static void tokenize(char *str, char **argv)
 {
     int i = 0;
     char *token = strtok(str, " \t\n");
+
     while (token != NULL)
     {
         argv[i++] = token;
         token = strtok(NULL, " \t\n");
     }
+
     argv[i] = NULL;
 }
+
 int main()
 {
-char *line;
-char **tokens;
-initialize_signals();
-while(1)
-{
-    printf("myshell> ");
-    line = read_line();
-if (strchr(line, '|') != NULL)
-{
-    char *argv1[64];
-    char *argv2[64];
-    char *left = strtok(line, "|");
-    char *right = strtok(NULL, "|");
-    if (left == NULL || right == NULL)
+    char *line;
+    char **tokens;
+
+    initialize_signals();
+
+    /* Start Week 10 background monitoring thread */
+    start_monitor_thread();
+
+    while(1)
     {
-        printf("Invalid pipe command\n");
-        continue;
-    }
-    tokenize(left, argv1);
-    tokenize(right, argv2);
-    execute_pipe(argv1, argv2);
-}
-else
-{
+        printf("myshell> ");
+
+        line = read_line();
+
+        if (strchr(line, '|') != NULL)
         {
-    if(strcmp(line,"exit")==0)
-    {
-        free(line);
-        break;
-    }
-    tokens = parse_line(line);
-    if(execute_builtin(tokens)==0)
-    {
-        if(execute_redirection(tokens)==0)
-        {
-                execute(tokens);
+            char *argv1[64];
+            char *argv2[64];
+
+            char *left = strtok(line, "|");
+            char *right = strtok(NULL, "|");
+
+            if (left == NULL || right == NULL)
+            {
+                printf("Invalid pipe command\n");
+                continue;
+            }
+
+            tokenize(left, argv1);
+            tokenize(right, argv2);
+
+            execute_pipe(argv1, argv2);
         }
-     }
-    free_tokens(tokens);
-free(line);
-}
-}
-return 0;
-}
+        else
+        {
+            if(strcmp(line, "exit") == 0)
+            {
+                free(line);
+                break;
+            }
+
+            tokens = parse_line(line);
+
+            if(execute_builtin(tokens) == 0)
+            {
+                if(execute_redirection(tokens) == 0)
+                {
+                    execute(tokens);
+                }
+            }
+
+            free_tokens(tokens);
+            free(line);
+        }
+    }
+
+    return 0;
 }
